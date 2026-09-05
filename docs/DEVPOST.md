@@ -111,8 +111,11 @@ ingestion, and multi-trip support.
       the JUDGING period (ends Oct 8, 2026) — tear down only after
 - [ ] $50 AWS credits requested (deadline Sep 11, 12:00 PT — form on
       the hackathon Resources page)
-- [ ] (Bonus, up to +0.6) up to THREE builder.aws.com posts, each with
+- [x] (Bonus, up to +0.6) up to THREE builder.aws.com posts, each with
       "Agents for Humans" in the title: docs/BUILDER_POST.md,
-      BUILDER_POST_2.md, BUILDER_POST_3.md
+      BUILDER_POST_2.md, BUILDER_POST_3.md — published 2026-09-05:
+      - https://builder.aws.com/content/3ItY93ZQci97fqT0MpIA3xVR0XF/agents-for-humans-teaching-an-agent-to-stay-quiet-with-strands-agents-and-amazon-bedrock
+      - https://builder.aws.com/content/3Itaysm3vMEaKIDKKYXO4iyoiOG/agents-for-humans-three-bugs-between-my-strands-agent-and-bedrock-agentcore-and-how-cloudwatch-solved-all-of-them
+      - https://builder.aws.com/content/3Itba4DIsAlhe4CpLm3Q6FXKDRC/agents-for-humans-turning-booking-emails-pdfs-and-screenshots-into-typed-data-with-bedrocks-multimodal-converse-api
 - [ ] Disclose standard tooling used (agentcore CLI scaffold for the
       CDK app; AI coding assistants — explicitly permitted by the rules)
