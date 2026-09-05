@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+.env
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
+dist/
+build/
+.DS_Store
+# runtime state (generated)
+data/runtime_trip.json
+# synced copies for AgentCore deploy (regenerate with scripts/sync_agentcore.py)
+agentcore_runtime/app/
+agentcore_runtime/data/
+agentcore/.env.local

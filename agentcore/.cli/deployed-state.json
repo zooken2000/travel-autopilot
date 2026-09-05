@@ -1,0 +1,17 @@
+{
+  "targets": {
+    "default": {
+      "resources": {
+        "runtimes": {
+          "TravelAutopilot": {
+            "runtimeId": "TravelAutopilot_TravelAutopilot-09Ie4k5y7C",
+            "runtimeArn": "arn:aws:bedrock-agentcore:us-east-1:915542664022:runtime/TravelAutopilot_TravelAutopilot-09Ie4k5y7C",
+            "roleArn": "arn:aws:iam::915542664022:role/AgentCore-TravelAutopilot-ApplicationAgentTravelAut-zNgBcejD2H5J"
+          }
+        },
+        "stackName": "AgentCore-TravelAutopilot-default",
+        "deployHash": "23f31ee9e20c1ac1"
+      }
+    }
+  }
+}

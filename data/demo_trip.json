@@ -1,0 +1,78 @@
+{
+  "trip_id": "swiss-2026-08",
+  "current_time": "2026-08-18T14:00:00",
+  "current_location": "Zermatt",
+  "updated_at": "2026-08-18T14:00:00",
+  "bookings": [
+    {
+      "booking_type": "flight",
+      "provider_name": "Swiss International Air Lines",
+      "confirmation_number": "LX161-DEMO",
+      "start_time": "2026-08-15T10:30:00",
+      "end_time": "2026-08-15T17:55:00",
+      "start_location": "Tokyo Narita (NRT)",
+      "end_location": "Zurich (ZRH)",
+      "notes": "Outbound flight"
+    },
+    {
+      "booking_type": "hotel",
+      "provider_name": "Hotel Schweizerhof Zurich",
+      "confirmation_number": "HSZ-4821",
+      "start_time": "2026-08-15T15:00:00",
+      "end_time": "2026-08-17T10:00:00",
+      "start_location": "Zurich",
+      "end_location": "Zurich",
+      "notes": "2 nights"
+    },
+    {
+      "booking_type": "train",
+      "provider_name": "SBB",
+      "confirmation_number": null,
+      "start_time": "2026-08-17T10:32:00",
+      "end_time": "2026-08-17T13:44:00",
+      "start_location": "Zurich HB",
+      "end_location": "Zermatt",
+      "notes": "Transfer at Visp"
+    },
+    {
+      "booking_type": "hotel",
+      "provider_name": "Hotel Bahnhof Zermatt",
+      "confirmation_number": "HBZ-1107",
+      "start_time": "2026-08-17T14:00:00",
+      "end_time": "2026-08-19T10:00:00",
+      "start_location": "Zermatt",
+      "end_location": "Zermatt",
+      "notes": "2 nights — NOTE: no accommodation booked for the night of Aug 19"
+    },
+    {
+      "booking_type": "activity",
+      "provider_name": "Restaurant Whymper-Stube",
+      "confirmation_number": null,
+      "start_time": "2026-08-18T19:00:00",
+      "end_time": "2026-08-18T21:00:00",
+      "start_location": "Zermatt",
+      "end_location": "Zermatt",
+      "notes": "Dinner reservation"
+    },
+    {
+      "booking_type": "hotel",
+      "provider_name": "Hotel Continental Zurich",
+      "confirmation_number": "HCZ-9932",
+      "start_time": "2026-08-20T15:00:00",
+      "end_time": "2026-08-22T10:00:00",
+      "start_location": "Zurich",
+      "end_location": "Zurich",
+      "notes": "2 nights before departure"
+    },
+    {
+      "booking_type": "flight",
+      "provider_name": "Swiss International Air Lines",
+      "confirmation_number": "LX160-DEMO",
+      "start_time": "2026-08-22T15:55:00",
+      "end_time": "2026-08-23T10:25:00",
+      "start_location": "Zurich (ZRH)",
+      "end_location": "Tokyo Narita (NRT)",
+      "notes": "Return flight — recommended airport arrival 12:55"
+    }
+  ]
+}

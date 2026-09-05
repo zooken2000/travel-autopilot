@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Travel Autopilot</title>
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn6ezPC90ZXh0Pjwvc3ZnPg==">
+<style>
+  :root{
+    --bg:#0f1420; --panel:#171e2e; --panel2:#1d2639; --line:#2a3550;
+    --text:#e8edf7; --muted:#8fa0bf; --accent:#5eb0ff; --green:#3ecf8e;
+    --amber:#ffb454; --red:#ff6b6b; --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Hiragino Sans",sans-serif}
+  header{display:flex;align-items:center;gap:14px;padding:16px 24px;
+    border-bottom:1px solid var(--line);background:var(--panel)}
+  header h1{font-size:18px;margin:0;font-weight:700}
+  header .sub{color:var(--muted);font-size:12px}
+  #status-pill{margin-left:auto;padding:6px 14px;border-radius:999px;font-weight:600;font-size:13px;transition:background .2s,color .2s}
+  .pill-quiet{background:rgba(62,207,142,.15);color:var(--green);animation:pulseGlow 2.6s ease-in-out infinite}
+  .pill-alert{background:rgba(255,107,107,.15);color:var(--red)}
+  @keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 rgba(62,207,142,0)}50%{box-shadow:0 0 0 6px rgba(62,207,142,.12)}}
+  main{display:grid;grid-template-columns:270px 1fr 340px;gap:18px;
+    padding:18px 24px;max-width:1280px;margin:0 auto}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:0 1px 0 rgba(255,255,255,.02) inset,0 10px 26px -14px rgba(0,0,0,.55)}
+  .card h2{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  label{display:block;font-size:12px;color:var(--muted);margin:10px 0 4px}
+  input{width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--line);
+    background:var(--panel2);color:var(--text);font:inherit}
+  button{width:100%;margin-top:10px;padding:9px 12px;border-radius:9px;border:1px solid var(--line);
+    background:var(--panel2);color:var(--text);font:inherit;font-weight:600;cursor:pointer;
+    transition:border-color .15s,box-shadow .15s,transform .08s}
+  button:hover{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+  button:active{transform:scale(.98)}
+  button.primary{background:var(--accent);border-color:var(--accent);color:#0b1220}
+  button.agent{background:linear-gradient(135deg,#7c5cff,#5eb0ff);border:none;color:#fff}
+  button.small{width:auto;padding:6px 10px;font-size:12px;margin:8px 0 0}
+  button:disabled{opacity:.5;cursor:wait}
+  .scenarios button{text-align:left}
+  .hint{font-size:11px;color:var(--muted);margin-top:8px}
+  /* timeline */
+  .day{margin-bottom:14px}
+  .day h3{font-size:12px;color:var(--muted);margin:0 0 8px;font-weight:600}
+  .event{display:flex;gap:10px;padding:10px 12px;border-radius:10px;background:var(--panel2);
+    border:1px solid transparent;margin-bottom:6px}
+  .event.past{opacity:.42}
+  .event.next{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset,0 0 18px -6px rgba(94,176,255,.55)}
+  .event .ico{font-size:18px}
+  .event .t{color:var(--muted);font-size:12px;white-space:nowrap}
+  .event .body{min-width:0}
+  .event .name{font-weight:600}
+  .event .loc{color:var(--muted);font-size:12px}
+  .next-tag{font-size:10px;color:var(--accent);font-weight:700;letter-spacing:.06em}
+  /* notifications */
+  #notifications:empty::after{content:"";display:block}
+  .quiet-box{padding:32px 16px;text-align:center;color:var(--green);line-height:1.6;
+    background:radial-gradient(circle at 50% 0%,rgba(62,207,142,.14),rgba(62,207,142,.05));
+    border:1px dashed rgba(62,207,142,.4);border-radius:14px}
+  .quiet-box .big{font-size:34px;display:block;margin-bottom:6px}
+  .notif{border-radius:12px;padding:12px 14px;margin-bottom:10px;background:var(--panel2);
+    border-left:4px solid var(--amber);animation:pop .25s ease}
+  .notif.departure_required,.notif.booking_conflict{border-left-color:var(--red)}
+  .notif.free_time{border-left-color:var(--green)}
+  .notif .from{font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+  .notif .title{font-weight:700;margin:2px 0}
+  .notif .msg{font-size:13px}
+  .notif .badge{display:inline-block;margin-top:6px;font-size:10px;padding:2px 8px;border-radius:999px;
+    background:rgba(255,107,107,.15);color:var(--red);font-weight:700}
+  .notif .badge.fyi{background:rgba(62,207,142,.15);color:var(--green)}
+  @keyframes pop{from{transform:translateY(-6px);opacity:0}to{transform:none;opacity:1}}
+  #agent-out{margin-top:12px;font-size:12px;color:var(--muted);white-space:pre-wrap}
+  .drop{
+    border:1.5px dashed var(--line);border-radius:10px;padding:16px 12px;
+    text-align:center;color:var(--muted);font-size:12px;cursor:pointer;
+    transition:border-color .15s, background .15s;
+  }
+  .drop.hover{border-color:var(--accent);background:rgba(94,176,255,.06)}
+  .drop .big{font-size:20px;display:block;margin-bottom:4px}
+  #import-out{font-size:12px;margin-top:8px;color:var(--muted);white-space:pre-wrap}
+  #import-out .ok{color:var(--green)}
+  #import-out .err{color:var(--red)}
+  .divider{border-top:1px solid var(--line);margin:14px 0}
+  .tech-pill{margin-left:16px;padding:4px 10px;border-radius:999px;font-size:11px;color:var(--muted);
+    border:1px solid var(--line);background:var(--panel2);white-space:nowrap}
+  .paid{border-left:3px solid var(--amber)}
+  footer.credit{text-align:center;padding:26px 12px 44px;color:var(--muted);font-size:11px}
+  footer.credit strong{color:#b9c4dd}
+  @media(max-width:980px){main{grid-template-columns:1fr}}
+  @media(max-width:760px){.tech-pill{display:none}}
+</style>
+</head>
+<body>
+<header>
+  <h1>🧳 Travel Autopilot</h1>
+  <div class="sub">Swiss Trip · Aug 15 – 23, 2026 · quietly monitoring</div>
+  <div class="tech-pill">Everyday Agents · Strands Agents SDK + Amazon Bedrock</div>
+  <div id="status-pill" class="pill-quiet">…</div>
+</header>
+
+<main>
+  <section>
+    <div class="card">
+      <h2>Situation</h2>
+      <label>Current time</label>
+      <input id="cur-time" type="datetime-local" step="60">
+      <label>Current location</label>
+      <input id="cur-loc" type="text">
+      <button class="primary" onclick="applySituation()">Apply &amp; check</button>
+      <div class="hint">Checks are deterministic and free. The agent (Bedrock) runs only from the button on the right.</div>
+    </div>
+    <div class="card scenarios" style="margin-top:14px">
+      <h2>Demo scenarios</h2>
+      <button onclick="loadScenario('conflict')">1&nbsp; ⚠️ Booking conflict</button>
+      <button onclick="loadScenario('freetime')">2&nbsp; 🕐 Unexpected free time</button>
+      <button onclick="loadScenario('airport')">3&nbsp; ✈️ Airport departure</button>
+      <button onclick="resetTrip()">↺ Reset trip</button>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <h2>Add bookings</h2>
+      <div class="drop" id="drop" onclick="document.getElementById('file-input').click()">
+        <span class="big">📩</span>
+        Drop a confirmation here<br>(.eml / .pdf / screenshot / .txt)
+      </div>
+      <input id="file-input" type="file" hidden
+        accept=".eml,.pdf,.png,.jpg,.jpeg,.webp,.gif,.txt">
+      <textarea id="import-text" rows="2" placeholder="…or paste booking text"
+        style="width:100%;margin-top:10px;padding:8px 10px;border-radius:8px;
+        border:1px solid var(--line);background:var(--panel2);color:var(--text);
+        font:inherit;resize:vertical"></textarea>
+      <button class="small paid" onclick="importText()">Extract &amp; add (Bedrock · paid)</button>
+      <div id="import-out"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Itinerary</h2>
+    <div id="timeline"></div>
+  </section>
+
+  <section>
+    <div class="card">
+      <h2>Autopilot</h2>
+      <div id="notifications"></div>
+      <div id="resolve-slot"></div>
+      <div class="divider"></div>
+      <button class="small paid" id="plan-btn" onclick="generatePlan()">🗓 Generate today's plan (Bedrock · paid)</button>
+      <pre id="plan-out" hidden style="font-size:12px;line-height:1.7;background:var(--panel2);
+        border-radius:10px;padding:12px;white-space:pre-wrap;margin:10px 0 0"></pre>
+      <div class="divider"></div>
+      <label style="display:block;font-size:12px;color:var(--muted);margin:0 0 4px">
+        Tell the agent (optional)</label>
+      <textarea id="agent-msg" rows="2" placeholder="e.g. Finished early — I'm at Gornergrat now, any suggestions?"
+        style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--line);
+        background:var(--panel2);color:var(--text);font:inherit;resize:vertical"></textarea>
+      <button class="agent" id="agent-btn" onclick="askAgent()">🤖 Ask Agent (Bedrock · paid)</button>
+      <div class="hint">Runs one autonomous monitoring cycle with the Strands agent: it reads the trip state, decides, and notifies only if needed.</div>
+      <div id="agent-out"></div>
+    </div>
+  </section>
+</main>
+
+<script>
+const ICONS = {flight:"✈️", hotel:"🏨", train:"🚆", activity:"🍽️", other:"📌"};
+let lastCheck = null;
+
+async function api(path, opts){
+  const res = await fetch(path, opts);
+  if(!res.ok){ throw new Error((await res.json()).detail || res.statusText); }
+  return res.json();
+}
+
+function fmtTime(iso){ return iso.slice(11,16); }
+function fmtDay(iso){
+  const d = new Date(iso);
+  return d.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"});
+}
+
+function render(check){
+  lastCheck = check;
+  const trip = check.trip;
+  document.getElementById("cur-time").value = trip.current_time.slice(0,16);
+  document.getElementById("cur-loc").value = trip.current_location || "";
+
+  // status pill
+  const pill = document.getElementById("status-pill");
+  if(check.silent){ pill.className="pill-quiet"; pill.textContent="● All quiet"; }
+  else{
+    const n = check.alerts.length;
+    pill.className="pill-alert"; pill.textContent=`● ${n} alert${n>1?"s":""}`;
+  }
+
+  // timeline grouped by day
+  const now = trip.current_time;
+  const next = trip.bookings.filter(b => b.start_time > now)
+    .sort((a,b) => a.start_time.localeCompare(b.start_time))[0];
+  const days = {};
+  for(const b of trip.bookings){
+    (days[b.start_time.slice(0,10)] ||= []).push(b);
+  }
+  let html = "";
+  for(const day of Object.keys(days).sort()){
+    html += `<div class="day"><h3>${fmtDay(day)}</h3>`;
+    for(const b of days[day].sort((a,c)=>a.start_time.localeCompare(c.start_time))){
+      const cls = b === next ? "next" : (b.end_time < now ? "past" : "");
+      const loc = b.start_location === b.end_location
+        ? b.start_location : `${b.start_location} → ${b.end_location}`;
+      html += `<div class="event ${cls}">
+        <div class="ico">${ICONS[b.booking_type]||"📌"}</div>
+        <div class="body">
+          ${b === next ? '<div class="next-tag">NEXT UP</div>' : ""}
+          <div class="name">${b.provider_name}</div>
+          <div class="t">${fmtTime(b.start_time)} – ${fmtTime(b.end_time)}</div>
+          <div class="loc">${loc}</div>
+        </div></div>`;
+    }
+    html += "</div>";
+  }
+  document.getElementById("timeline").innerHTML = html;
+
+  renderAlerts(check.alerts, "Autopilot · deterministic check");
+}
+
+function renderAlerts(alerts, source){
+  const box = document.getElementById("notifications");
+  const resolve = document.getElementById("resolve-slot");
+  resolve.innerHTML = "";
+  if(!alerts.length){
+    box.innerHTML = `<div class="quiet-box"><div class="big">😌</div>
+      No intervention required.<br>Silence is a successful agent action.</div>`;
+    return;
+  }
+  box.innerHTML = alerts.map(a => `
+    <div class="notif ${a.alert_type}">
+      <div class="from">${source}</div>
+      <div class="title">${a.title}</div>
+      <div class="msg">${a.message}</div>
+      <span class="badge ${a.requires_user_action?"":"fyi"}">
+        ${a.requires_user_action?"ACTION REQUIRED":"FYI"}</span>
+    </div>`).join("");
+  if(alerts.some(a => a.message.includes("No accommodation"))){
+    resolve.innerHTML = `<button class="small" onclick="resolveGap()">
+      ✔ Book the missing night (resolve)</button>`;
+  }
+}
+
+async function refresh(){ render(await api("/api/check")); }
+async function loadScenario(name){
+  render(await api(`/api/scenario/${name}`, {method:"POST"}));
+  document.getElementById("agent-out").textContent = "";
+}
+async function resetTrip(){ render(await api("/api/reset", {method:"POST"})); }
+async function resolveGap(){ render(await api("/api/resolve-gap", {method:"POST"})); }
+async function applySituation(){
+  const body = JSON.stringify({
+    current_time: document.getElementById("cur-time").value + ":00",
+    current_location: document.getElementById("cur-loc").value
+  });
+  render(await api("/api/situation",
+    {method:"POST", headers:{"Content-Type":"application/json"}, body}));
+}
+
+async function askAgent(){
+  const btn = document.getElementById("agent-btn");
+  const out = document.getElementById("agent-out");
+  btn.disabled = true; btn.textContent = "🤖 Agent thinking…";
+  out.textContent = "";
+  try{
+    const msg = document.getElementById("agent-msg").value.trim();
+    const res = await api("/api/agent/run", {method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify(msg ? {message: msg} : {})});
+    const check = await api("/api/check");   // agent may have updated the trip state
+    render(check);
+    if(res.notifications.length){
+      renderAlerts(res.notifications, "Strands agent · Amazon Bedrock");
+    }
+    if(res.final_text && res.final_text !== "SILENT"){
+      out.textContent = res.final_text;
+    }
+  }catch(err){
+    out.textContent = "Agent error: " + err.message;
+  }finally{
+    btn.disabled = false; btn.textContent = "🤖 Ask Agent (Bedrock · paid)";
+  }
+}
+
+async function generatePlan(){
+  const btn = document.getElementById("plan-btn");
+  const out = document.getElementById("plan-out");
+  btn.disabled = true;
+  out.hidden = false; out.textContent = "⏳ Planning…";
+  try{
+    const res = await api("/api/plan", {method:"POST"});
+    out.textContent = res.plan;
+  }catch(err){
+    out.textContent = "🚫 " + err.message;
+  }finally{ btn.disabled = false; }
+}
+
+const drop = document.getElementById("drop");
+const fileInput = document.getElementById("file-input");
+["dragenter","dragover"].forEach(ev => drop.addEventListener(ev, e => {
+  e.preventDefault(); drop.classList.add("hover");
+}));
+["dragleave","drop"].forEach(ev => drop.addEventListener(ev, e => {
+  e.preventDefault(); drop.classList.remove("hover");
+}));
+drop.addEventListener("drop", e => {
+  if(e.dataTransfer.files.length) importFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener("change", () => {
+  if(fileInput.files.length){ importFile(fileInput.files[0]); fileInput.value=""; }
+});
+
+function importStatus(html){ document.getElementById("import-out").innerHTML = html; }
+
+async function importFile(file){
+  importStatus(`⏳ Reading ${file.name} with Bedrock…`);
+  const form = new FormData();
+  form.append("file", file);
+  await runImport(form);
+}
+
+async function importText(){
+  const text = document.getElementById("import-text").value.trim();
+  if(!text){ importStatus('<span class="err">Paste some booking text first.</span>'); return; }
+  importStatus("⏳ Extracting with Bedrock…");
+  const form = new FormData();
+  form.append("text", text);
+  await runImport(form);
+}
+
+async function runImport(form){
+  try{
+    const res = await fetch("/api/bookings/import", {method:"POST", body:form});
+    const body = await res.json();
+    if(!res.ok) throw new Error(body.detail || res.statusText);
+    render(body.check);
+    const names = body.added.map(b => `${ICONS[b.booking_type]||""} ${b.provider_name}`).join(", ");
+    let msg = `<span class="ok">✓ Added ${body.added.length} booking(s):</span> ${names}`;
+    if(body.skipped_duplicates) msg += ` (${body.skipped_duplicates} duplicate(s) skipped)`;
+    importStatus(msg);
+    document.getElementById("import-text").value = "";
+  }catch(err){
+    importStatus(`<span class="err">✗ ${err.message}</span>`);
+  }
+}
+
+refresh();
+</script>
+<footer class="credit">Built for the <strong>Agents for Humans Hackathon</strong> · Everyday Agents track</footer>
+</body>
+</html>
