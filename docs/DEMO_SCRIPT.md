@@ -11,7 +11,7 @@ Voiceover over screen capture; no camera needed.
 
 *Show: a phone photo of a trip / the itinerary screen.*
 
-> Last summer in Switzerland I made the same discovery every traveler
+> This summer in Switzerland I made the same discovery every traveler
 > makes: a trip is a stream of tiny decisions. Which train? When do I
 > leave for the airport? What do I do with a free afternoon?
 > Chat assistants don't help unless you ask. The problem isn't answering
