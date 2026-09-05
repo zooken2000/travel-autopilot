@@ -73,5 +73,4 @@ urgent and does not require intervention at this time.
 The deployed agent triaging on its own — one alert escalated, one
 non-issue left alone. Worth all three bugs.
 
-*Travel Autopilot: https://github.com/zooken2000/travel-autopilot. Built with Strands Agents SDK, Amazon
-Bedrock, and Bedrock AgentCore for the Agents for Humans hackathon.*
+*Built with the Strands Agents SDK, Amazon Bedrock, and Bedrock AgentCore for the Agents for Humans hackathon. [View the code on GitHub](https://github.com/zooken2000/travel-autopilot).*
