@@ -1,5 +1,7 @@
 # 🧳 Travel Autopilot
 
+[![CI](https://github.com/zooken2000/travel-autopilot/actions/workflows/ci.yml/badge.svg)](https://github.com/zooken2000/travel-autopilot/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/zooken2000/travel-autopilot/blob/main/LICENSE)
+
 **An autonomous AI agent — built with the Strands Agents SDK on Amazon Bedrock — that quietly manages your trip and intervenes only when you need to decide.**
 
 Built for the **Agents for Humans Hackathon** — Track: *Everyday Agents*.

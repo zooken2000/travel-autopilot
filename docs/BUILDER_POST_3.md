@@ -68,5 +68,5 @@ reads it, the booking lands in the trip state, the deterministic
 consistency checker re-runs — and the alert simply disappears. One
 gesture, one Bedrock call, and the itinerary heals itself.
 
-*Travel Autopilot: [repo URL]. Built with Strands Agents SDK, Amazon
+*Travel Autopilot: https://github.com/zooken2000/travel-autopilot. Built with Strands Agents SDK, Amazon
 Bedrock, and Bedrock AgentCore for the Agents for Humans hackathon.*

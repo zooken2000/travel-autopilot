@@ -70,5 +70,5 @@ broken itinerary, and above all refuses to talk when there's nothing to
 say. Those refusals, more than any prompt, are what make it feel less
 like a chatbot and more like an autopilot.
 
-*Travel Autopilot: [repo URL]. Built with Strands Agents SDK, Amazon
+*Travel Autopilot: https://github.com/zooken2000/travel-autopilot. Built with Strands Agents SDK, Amazon
 Bedrock, and Bedrock AgentCore.*
